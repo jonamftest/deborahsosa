@@ -9,6 +9,8 @@ function iniciarTokko(){
 	selectOperacion = document.getElementById('tipoOperacion');
 
 	selectOperacion.addEventListener('change', desactivarSelectProp, false);
+
+	buscador = document.getElementById('buscador');
 }
 
 const traerPropiedades=async()=>{
@@ -54,7 +56,7 @@ const traerZonas=async()=>{
 			console.log(dataZonas.divisions);
 
 			var $selectZonas = $('#zonas');
-			$selectZonas.empty().append('<option selected disabled value="">Todos</option>');
+			/*$selectZonas.empty().append('<option selected disabled value="">Todos</option>');*/
 			$(dataZonas.divisions).each(function(id, nombre) {
 				
       			$selectZonas.append('<option value=' + nombre.id + '>' + nombre.name + '</option>');
@@ -77,13 +79,34 @@ function desactivarSelectProp(){
 		$("#ambientes").prop("disabled", true);
 		$(".selectpicker[data-id='ambientes']").addClass("disabled");
 
+		$("#provincias option[value='']").attr("selected",true);
+		$('#provincias').selectpicker("refresh");
+		$("#provincias").prop("disabled", true);
+		$(".selectpicker[data-id='provincias']").addClass("disabled");
+
+		$("#zonas option[value='']").attr("selected",true);
+		$('#zonas').selectpicker("refresh");
+		$("#zonas").prop("disabled", true);
+		$(".selectpicker[data-id='zonas']").addClass("disabled");
+
+		buscador.setAttribute('action', 'emprendimientos.php');
+
 
 	}else{
+
 		$("#propiedades").prop("disabled", false);
 		$(".selectpicker[data-id='propiedades']").removeClass("disabled");
 
 		$("#ambientes").prop("disabled", false);
 		$(".selectpicker[data-id='ambientes']").removeClass("disabled");
+
+		$("#provincias").prop("disabled", false);
+		$(".selectpicker[data-id='provincias']").removeClass("disabled");
+
+		$("#zonas").prop("disabled", false);
+		$(".selectpicker[data-id='zonas']").removeClass("disabled");
+
+		buscador.setAttribute('action', 'buscador.php');
 	}
 }
 

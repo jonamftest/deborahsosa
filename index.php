@@ -69,7 +69,7 @@
 			<div class="tab-container">
 				<div class="container clearfix">
 					<div class="tab-content clearfix" id="tab-properties">
-						<form action="buscador.php" method="get" class="mb-0">
+						<form action="buscador.php" method="get" class="mb-0" id="buscador">
 							<div class="row">
 								<div class="col-lg-3 col-md-6 col-12 bottommargin-sm">
 									<label for="">Operación</label>
