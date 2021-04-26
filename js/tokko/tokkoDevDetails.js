@@ -25,7 +25,7 @@ app.controller("tokkoDevDetailsControllers", function($scope, $http){
 				$scope.descripFormat2= $scope.descripcionFormat.replace("\n\n", '<p>');
 				document.getElementById('detalle').innerHTML = $scope.descripFormat2.replace("\n", '<p>');
 				var $mapa = $('#mapas');2
-				$mapa.append("<iframe src='https://www.google.com/maps?q="+$scope.emprendimiento.geo_lat+","+$scope.emprendimiento.geo_long+";z=14&#038;t=&#038;ie=UTF8&#038;output=embed' width='500' height='500'></iframe>");
+				$mapa.append("<iframe src='https://www.google.com/maps?q="+$scope.emprendimiento.geo_lat+","+$scope.emprendimiento.geo_long+"&#038;z=14&#038;t=&#038;ie=UTF8&#038;output=embed' width='500' height='500'></iframe>");
 			});
 	}
 })
