@@ -2,13 +2,13 @@
     require("admin/pages/config.php");
 	require("admin/pages/database.php");
 ?>
-<!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<!DOCTYPE >
+<html dir="ltr" lang="en-US" html ng-app="tokkoIndex">
 <head>
 	<?php include("head.php"); ?>
 </head>
 
-<body class="stretched">
+<body class="stretched" ng-controller="tokkoIndexController">
 
 	<!-- Document Wrapper
 	============================================= -->
@@ -73,42 +73,24 @@
 							<div class="row">
 								<div class="col-lg-3 col-md-6 col-12 bottommargin-sm">
 									<label for="">Operación</label>
-									<select name="tipo_operacion" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;">
+									<select name="tipo_operacion" id="tipoOperacion"class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;">
 										<option value="">Todas</option>
-										<?php 
-										$pdo = Database::connect();
-										$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-										$sqlZon = "SELECT `id`, `tipo` FROM `tipos_operacion` WHERE 1";
-										$q = $pdo->prepare($sqlZon);
-										$q->execute();
-										while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-											echo "<option value='".$fila['id']."'>".$fila['tipo']."</option>";
-										}
-										Database::disconnect();
-										?>
+							  			<option value="1">Comprar</option>
+							  			<option value="2">Alquiler</option>
+							  			<option value="3">Alquiler temporario</option>
+							  			<option value="4">Emprendimientos</option>
 									</select>
 								</div>
 								<div class="col-lg-3 col-md-6 col-12 bottommargin-sm">
 									<label for="">Propiedad</label>
-									<select name="tipo_publicacion" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;">
+									<select name="propiedades" class="selectpicker form-control" id="propiedades" data-size="6" style="width:100%; line-height: 30px;">
 										<option value="">Todas</option>
-										<?php 
-										$pdo = Database::connect();
-										$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-										$sqlZon = "SELECT `id`, `tipo` FROM `tipos_publicacion` WHERE 1";
-										$q = $pdo->prepare($sqlZon);
-										$q->execute();
-										while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-											echo "<option value='".$fila['id']."'>".$fila['tipo']."</option>";
-										}
-										Database::disconnect();
-										?>
-										
+
 									</select>
 								</div>
 								<div class="col-lg-2 col-md-6 col-6 bottommargin-sm">
 									<label for="">Ambientes</label>
-									<select name="ambientes" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;">
+									<select name="ambientes" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;" id="ambientes">
 										<option value="">Todos</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -118,18 +100,26 @@
 									</select>
 								</div>
 								<div class="col-lg-2 col-md-6 col-6 bottommargin-sm">
+									<label for="">Provincia</label>
+									<select name="provincia" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;" id="provincias">
+										<option value="">Todos</option>
+									</select>
+								</div>
+								<!--<div class="col-lg-2 col-md-6 col-6 bottommargin-sm">
 									<label for="">Apto Crédito</label>
 									<select name="apto_credito" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;">
 										<option value="">Todos</option>
 										<option value="1">Si</option>
 										<option value="2">No</option>
 									</select>
-								</div>
+								</div>-->
 								
 								<div class="w-100"></div>
-								<div class="col-lg-8 col-md-6 col-12">
+								<div class="col-lg-2 col-md-6 col-6">
 									<label for="" style="margin-bottom: 20px !important;">Zona</label>
-									<input type="text" name="zona" class="form-control" placeholder="Ingresá Zona, Localidad, Provincia" />
+									<select name="zonas" class="selectpicker form-control" data-size="6" style="width:100%; line-height: 30px;" id="zonas">
+										<option value="">Todos</option>
+									</select>
 								</div>
 								<div class="col-lg-2 col-md-12 clearfix">
 									<button class="button button-3d button-rounded btn-block m-0" style="margin-top: 35px !important;">Buscar</button>
@@ -165,12 +155,6 @@
 						</div>
 
 						<div class="col-lg-7 align-self-end">
-							<?php
-								$sql2 = " SELECT id,`imagen` FROM `imagenes_publicaciones` WHERE id_publicacion = ".$data['id'];
-								$q2 = $pdo->prepare($sql2);
-								$q2->execute();
-								$fila2 = $q2->fetch(PDO::FETCH_ASSOC);
-								?>
 							<div class="position-relative overflow-hidden">
 								<img src="images/services/main-fbrowser.png" data-animate="fadeInUp" data-delay="100" alt="Chrome">
 								<img src="images/services/main-fmobile.png" style="top: 0; left: 0; min-width: 100%; min-height: 100%;" data-animate="fadeInUp" data-delay="400" alt="iPhone" class="position-absolute">
@@ -188,64 +172,42 @@
 						</div>
 					</div>
 				</div>
-
+				<!-- INICIAMOS TOKKENINDEX-->
+				<div ng-init="iniciarTokkoIndex()">
 				<div id="portfolio" class="portfolio row no-gutters portfolio-reveal grid-container">
-
-					<?php 
-					$pdo = Database::connect();
-					$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-					$sqlZon = " SELECT `id`, `titulo`, `barrio`, `localidad` FROM `publicaciones` WHERE `nuevo_ingreso` = 1 and `activa` = 1 order by fecha_alta desc";
-					$q = $pdo->prepare($sqlZon);
-					$q->execute();
-					while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-					?>
-					
-					<article class="portfolio-item col-6 col-md-4 col-lg-3 pf-icons pf-illustrations">
+					<article class="portfolio-item col-6 col-md-4 col-lg-3 p-2 pf-icons pf-illustrations" ng-repeat='nvIngresos in NuevasPropiedades'>
 						<div class="grid-inner">
 							<div class="portfolio-image">
-								<a href="detalle.php?id=<?php echo $fila['id'];?>">
-									<?php 
-									$sql3 = " SELECT `imagen` FROM `imagenes_publicaciones` WHERE id_publicacion = ".$fila['id']." limit 0,1";
-									$q3 = $pdo->prepare($sql3);
-									$q3->execute();
-									$fila3 = $q3->fetch(PDO::FETCH_ASSOC);
-									echo '<img src="admin/pages/publicaciones/'.$fila3['imagen'].'" alt="">';
-									?>
-								</a>
+								<img src="{{nvIngresos.photos[0].image}}">
 								<div class="bg-overlay" data-lightbox="gallery">
 									<div class="bg-overlay-content dark" data-hover-animate="fadeIn" data-hover-parent=".portfolio-item">
-										<?php 
-										$sql2 = " SELECT `imagen` FROM `imagenes_publicaciones` WHERE id_publicacion = ".$fila['id'];
-										$q2 = $pdo->prepare($sql2);
-										$q2->execute();
-										$i = 0;
-										while ($fila2 = $q2->fetch(PDO::FETCH_ASSOC)) {
-											if ($i == 0) {
-												echo '<a href="admin/pages/publicaciones/'.$fila2['imagen'].'" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeInDownSmall" data-hover-animate-out="fadeOutUpSmall" data-hover-speed="350" data-hover-parent=".portfolio-item" data-lightbox="gallery-item"><i class="icon-line-stack-2"></i></a>';
-											} else {
-												echo '<a href="admin/pages/publicaciones/'.$fila2['imagen'].'" class="d-none" data-lightbox="gallery-item"></a>';
-											}
-											$i++;
-										}
-										?>
-										<a href="detalle.php?id=<?php echo $fila['id'];?>" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeInDownSmall" data-hover-animate-out="fadeOutUpSmall" data-hover-speed="350" data-hover-parent=".portfolio-item"><i class="icon-line-ellipsis"></i></a>
+										<!-- CONTENIDO NUEVOS INGRESOS-->
+
+										<a href="{{nvIngresos.photos[0].image}}" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeInDownSmall" data-hover-animate-out="fadeOutUpSmall" data-hover-speed="350" data-hover-parent=".portfolio-item" data-lightbox="gallery-item"><i class="icon-line-stack-2"></i></a>
+
+										<div ng-repeat="fotos in nvIngresos.photos">
+											<div ng-if='fotos.image != nvIngresos.photos[0].image'>
+												<a href="{{fotos.image}}" class="d-none" data-lightbox="gallery-item"></a>
+											</div>
+										</div>
+
+										<a href="detalle.php?id={{nvIngresos.id}}&price={{nvIngresos.operations[0].prices[0].price}}" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeInDownSmall" data-hover-animate-out="fadeOutUpSmall" data-hover-speed="350" data-hover-parent=".portfolio-item"><i class="icon-line-ellipsis"></i></a>
+
+										
 									</div>
 									<div class="bg-overlay-bg dark" data-hover-animate="fadeIn" data-hover-parent=".portfolio-item"></div>
 								</div>
 							</div>
 							<div class="portfolio-desc">
-								<h3><a href="detalle.php?id=<?php echo $fila['id'];?>"><?php echo $fila['titulo'];?></a></h3>
-								<span><a href="buscador.php?barrio=<?php echo $fila['barrio'];?>"><?php echo $fila['barrio'];?></a>, <a href="buscador.php?localidad=<?php echo $fila['localidad'];?>"><?php echo $fila['localidad'];?></a></span>
+								<a href="detalle.php?id={{nvIngresos.id}}&price={{nvIngresos.operations[0].prices[0].price}}">
+									<h3>{{nvIngresos.publication_title}}</h3>
+									<span>{{nvIngresos.location.full_location}}</span>
+								</a>
 							</div>
 						</div>
 					</article>
-					
-					<?php
-					}
-					Database::disconnect();
-					?>
 				</div>
-
+				</div>
 				<div class="container clearfix">
 
 					<div class="heading-block topmargin-lg center">
@@ -514,10 +476,6 @@
 								</div>
 
 							</div>
-							
-							
-
-							
 
 						</div>
 						</div>
@@ -552,13 +510,18 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</section><!-- #content end -->
+
+
+		</section>
+		<!-- #content end -->
+		
 
 		<!-- Footer
 		============================================= -->
 		<footer id="footer" class="dark">
+
 			<?php include("footer.php"); ?>
+
 		</footer><!-- #footer end -->
 
 	</div><!-- #wrapper end -->
@@ -571,6 +534,11 @@
 	============================================= -->
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins.min.js"></script>
+	<!--LIBRERÍA ANGULAR-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!--CONTROLADORES DE ANGULAR-->
+	<script src="js/tokko/tokko.js"></script>
+	<script src="js/tokko/tokkoIndex.js"></script>
 
 	<!-- Footer Scripts
 	============================================= -->

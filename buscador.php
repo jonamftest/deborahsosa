@@ -1,15 +1,54 @@
 <?php
     require("admin/pages/config.php");
 	require("admin/pages/database.php");
+
+	/*TOMAMOS LAS VARIABLES ENVIADAS DESDE LA HOME*/
+
+	if (isset($_GET['propiedades'])) {
+		$propiedades = $_GET['propiedades'];
+	}else{
+		$propiedades = "";
+	}
+
+	if (isset($_GET['ambientes'])) {
+		$ambientes = $_GET['ambientes'];
+	}else{
+		$ambientes =  "";
+	}
+
+	if (isset($_GET['provincia'])) {
+		$provincia = $_GET['provincia'];
+	}else{
+		$provincia =  "";
+	}
+
+	if (isset($_GET['zonas'])) {
+		$zona = $_GET['zonas'];
+	}else{
+		$zona =  "";
+	}
+
+	if (isset($_GET['tipo_operacion'])) {
+		$tipo_operacion = $_GET['tipo_operacion'];
+	}else{
+		$tipo_operacion =  "";
+	}
+
+
 ?>
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" ng-app="tokkoSearch">
 <head>
 
 	<?php include("head.php"); ?>
 </head>
 
-<body class="stretched side-push-panel">
+<body class="stretched side-push-panel" ng-controller="tokkoSearchController">
+	<input type="hidden" id="tipoOperacion" value="<?php echo $tipo_operacion; ?>">
+	<input type="hidden" id="propiedades" value="<?php echo $propiedades; ?>">
+	<input type="hidden" id="ambientes" value="<?php echo $ambientes; ?>">
+	<input type="hidden" id="provincia" value="<?php echo $provincia; ?>">
+	<input type="hidden" id="zona" value="<?php echo $zonas; ?>">
 
 	<!-- Document Wrapper
 	============================================= -->
@@ -30,7 +69,7 @@
 		</section>
 		<!-- Content
 		============================================= -->
-		<section id="content">
+		<section id="content" ng-init="iniciarTokkoSearch()">
 			<div class="content-wrap pt-0">
 
 				<div class="section bg-transparent m-0 clearfix">
@@ -40,36 +79,27 @@
 								<div class="btn-group">
 									<div class="dropdown">
 										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tipo Operación</button>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-											<?php 
-											$pdo = Database::connect();
-											$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-											$sqlZon = "SELECT `id`, `tipo` FROM `tipos_operacion` WHERE 1";
-											$q = $pdo->prepare($sqlZon);
-											$q->execute();
-											while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-												echo '<button onclick="document.location.href=\'buscador.php?tipo_operacion='.$fila['id'].'\'" class="dropdown-item" type="button">'.$fila['tipo'].'</button>';
-											}
-											Database::disconnect();
-											?>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenu2" id="tipoOperacion">
+
+										<button onclick="document.location.href='buscador.php?tipo_operacion='" class="dropdown-item" type="button">Todas</button>
+										<button onclick="document.location.href='buscador.php?tipo_operacion=1'" class="dropdown-item" type="button">Comprar</button>
+										<button onclick="document.location.href='buscador.php?tipo_operacion=2'" class="dropdown-item" type="button">Alquiler</button>
+							  			<button onclick="document.location.href='buscador.php?tipo_operacion=3'" class="dropdown-item" type="button">Alquiler temporario</button>
+							  			<button onclick="document.location.href='buscador.php?tipo_operacion='" class="dropdown-item" type="button">Emprendimientos</button>
+
 										</div>
 									</div>&nbsp;
 									<div class="dropdown ml-2">
-										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tipo Propiedad</button>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-											<?php 
-											$pdo = Database::connect();
-											$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-											$sqlZon = "SELECT `id`, `tipo` FROM `tipos_publicacion` WHERE 1";
-											$q = $pdo->prepare($sqlZon);
-											$q->execute();
-											while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-												echo '<button onclick="document.location.href=\'buscador.php?tipo_publicacion='.$fila['id'].'\'" class="dropdown-item" type="button">'.$fila['tipo'].'</button>';
-											}
-											Database::disconnect();
-											?>
+										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tipo Propiedad</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenu3" ng-repeat='tipoProp in tipoPropiedades'>
+
+										<div ng-repeat='tipoProp in tipoPropiedades'>
+											<div ng-if="tipoProp.name == 'Casa' || tipoProp.name == 'Local' || tipoProp.name == 'Departamento' || tipoProp.name == 'PH' || tipoProp.name == 'Terreno' || tipoProp.name == 'Oficina'">
+												<a href="buscador.php?propiedades={{tipoProp.id}}" class="dropdown-item" type="button">{{tipoProp.name}}</a>
+											</div>
+										</div>	
 										</div>
-									</div>&nbsp;
+									</div>
 									<div class="dropdown ml-2">
 										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ambientes</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -80,145 +110,76 @@
 											<button onclick="document.location.href='buscador.php?ambientes=5'" class="dropdown-item" type="button">5+</button>
 										</div>
 									</div>&nbsp;
-									<div class="dropdown ml-2">
+									<!--<div class="dropdown ml-2">
 										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Apto Crédito</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 											<button onclick="document.location.href='buscador.php?apto_credito=1'" class="dropdown-item" type="button">Si</button>
 											<button onclick="document.location.href='buscador.php?apto_credito=0'" class="dropdown-item" type="button">No</button>
 										</div>
-									</div>
+									</div>-->
 									<div class="dropdown ml-2">
 										<button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Provincia</button>
 										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-											<?php 
-											$pdo = Database::connect();
-											$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-											$sqlZon = "SELECT `id`, `provincia` tipo FROM `provincias` WHERE 1";
-											$q = $pdo->prepare($sqlZon);
-											$q->execute();
-											while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-												echo '<button onclick="document.location.href=\'buscador.php?id_provincia='.$fila['id'].'\'" class="dropdown-item" type="button">'.$fila['tipo'].'</button>';
-											}
-											Database::disconnect();
-											?>
+										<div ng-repeat='prov in provinciasFiltros'>
+											<a href="buscador.php?provincia={{prov.id}}" class="dropdown-item" type="button">{{prov.name}}</a>
+										</div>
 										</div>
 									</div>
 								</div>
 								
 							</div>
 						</div>
-
-						<div class="real-estate mt-5 grid-container row portfolio gutter-20 col-mb-50" data-layout="fitRows">
-
-							<?php 
-							$pdo = Database::connect();
-							$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-							$sqlZon = " SELECT p.`id`, p.`titulo`, p.`id_tipo_operacion`, ope.tipo opetipo, p.`id_tipo_publicacion`, pub.tipo pubtipo, p.`apto_credito`, p.`superficie_cubierta`, p.`superficie_total`, p.`cant_habitaciones`, p.`cant_banios`, p.`precio`, p.`barrio`, p.`localidad`, p.`id_provincia`, pr.provincia FROM `publicaciones` p INNER JOIN tipos_operacion ope on ope.id = p.`id_tipo_operacion` INNER JOIN tipos_publicacion pub on pub.id = p.`id_tipo_publicacion` INNER JOIN provincias pr on pr.id = p.`id_provincia` WHERE p.`activa` = 1 ";
+						<div ng-if="propiedades=='buscando'">
+							{{infoEstadoBusqueda}}
+						</div>
+						<div ng-if="propiedades==''">
+							{{infoEstadoBusqueda}}
+						</div>
+						<div ng-if="propiedades !=''">
 							
-							if (!empty($_GET['id_provincia'])) {
-								$sqlZon .= " and p.`id_provincia` = ".$_GET['id_provincia']." ";
-							}
-							
-							if (!empty($_GET['barrio'])) {
-								$sqlZon .= " and p.`barrio` = ".$_GET['barrio']." ";
-							}
-							
-							if (!empty($_GET['localidad'])) {
-								$sqlZon .= " and p.`localidad` = ".$_GET['localidad']." ";
-							}
-							
-							if (!empty($_GET['tipo_operacion'])) {
-								$sqlZon .= " and p.`id_tipo_operacion` = ".$_GET['tipo_operacion']." ";
-							}
-							
-							if (!empty($_GET['tipo_publicacion'])) {
-								$sqlZon .= " and p.`id_tipo_publicacion` = ".$_GET['tipo_publicacion']." ";
-							}
-							
-							if (!empty($_GET['ambientes'])) {
-								$sqlZon .= " and p.`cant_habitaciones` = ".$_GET['ambientes']." ";
-							}
-							
-							if (!empty($_GET['apto_credito'])) {
-								$sqlZon .= " and p.`apto_credito` = ".$_GET['apto_credito']." ";
-							}
-							
-							if (!empty($_GET['zona'])) {
-								$sqlZon .= " and p.`barrio` = ".$_GET['zona']." ";
-							}
-							
-							$sqlZon .= " order by p.`fecha_alta` desc ";
-							$q = $pdo->prepare($sqlZon);
-							$q->execute();
-							while ($fila = $q->fetch(PDO::FETCH_ASSOC)) {
-							?>
-							
-							<div class="real-estate-item portfolio-item col-12 col-md-6 col-lg-4">
+						<div class="real-estate mt-5 row portfolio gutter-20 col-mb-50" data-layout="fitRows">
+							<div class="real-estate-item portfolio-item col-12 col-md-6 col-lg-4" ng-repeat="prop in propiedades">
 								<div class="real-estate-item-image">
-									<div class="label badge badge-danger bg-color2"><?php echo $fila['opetipo'];?></div>
-									<a href="#">
-										<?php 
-										$sql3 = " SELECT `imagen` FROM `imagenes_publicaciones` WHERE id_publicacion = ".$fila['id']." limit 0,1";
-										$q3 = $pdo->prepare($sql3);
-										$q3->execute();
-										$fila3 = $q3->fetch(PDO::FETCH_ASSOC);
-										echo '<img src="admin/pages/publicaciones/'.$fila3['imagen'].'" alt="">';
-										?>
-									</a>
-									<div class="real-estate-item-price">
-										u$s<?php echo number_format($fila['precio'],0);?><span><?php echo $fila['pubtipo'];?></span>
+									<div class="label badge badge-danger bg-color2">
+										{{prop.operations[0].operation_type}}
 									</div>
-									<div class="real-estate-item-info clearfix" data-lightbox="gallery">
-										<?php 
-										$sql2 = " SELECT `imagen` FROM `imagenes_publicaciones` WHERE id_publicacion = ".$fila['id'];
-										$q2 = $pdo->prepare($sql2);
-										$q2->execute();
-										$i = 0;
-										while ($fila2 = $q2->fetch(PDO::FETCH_ASSOC)) {
-											if ($i == 0) {
-												echo '<a href="admin/pages/publicaciones/'.$fila2['imagen'].'" data-toggle="tooltip" title="Galeria" data-lightbox="gallery-item"><i class="icon-line-stack-2"></i></a>';
-											} else {
-												echo '<a href="admin/pages/publicaciones/'.$fila2['imagen'].'" class="d-none" data-lightbox="gallery-item"></a>';
-											}
-											$i++;
-										}
-										?>
-										
-										
+									<a href="detalle.php?id={{prop.id}}&price={{prop.operations[0].prices[0].price}}">
+									 	<img src="{{prop.photos[0].image}}">
+									</a>
+									<div class="real-estate-item-price" lang="es">
+										{{prop.operations[0].prices[0].currency}}  {{prop.operations[0].prices[0].price | currency: '': '0.0'}}<span>{{prop.type.name}}</span>
 									</div>
 								</div>
 
 								<div class="real-estate-item-desc p-0">
-									<h3><a href="detalle.php?id=<?php echo $fila['id'];?>"><?php echo $fila['titulo'];?></a></h3>
-									<span><?php echo $fila['barrio'];?>, <?php echo $fila['localidad'];?>, <?php echo $fila['provincia'];?></span>
+									<h3><a href="detalle.php?id={{prop.id}}&price={{prop.operations[0].prices[0].price}}">{{prop.real_address}}</a></h3>
+									<span>{{prop.location.full_location}}</span>
 
-									<a href="detalle.php?id=<?php echo $fila['id'];?>" class="real-estate-item-link"><i class="icon-eye"></i></a>
+									<a href="detalle.php?id={{prop.id}}&price={{prop.operations[0].prices[0].price}}" class="real-estate-item-link"><i class="icon-eye"></i></a>
 
 									<div class="line" style="margin-top: 15px; margin-bottom: 15px;"></div>
 
 									<div class="real-estate-item-features row font-weight-medium font-primary px-3 clearfix">
-										<div class="col-lg-6 col-6 p-0">Cant. Habitaciones: <span class="color"><?php echo $fila['cant_habitaciones'];?></span></div>
-										<div class="col-lg-6 col-6 p-0">Cant. Baños: <span class="color"><?php echo $fila['cant_banios'];?></span></div>
+										<div class="col-lg-6 col-6 p-0">Cant. Habitaciones: {{prop.room_amount}}<span class="color"></span></div>
+										<div class="col-lg-6 col-6 p-0">Cant. Baños: <span class="color">{{prop.bathroom_amount}}</span></div>
 										<br>
-										<div class="col-lg-6 col-6 p-0">Sup. Cubierta: <span class="color"><?php echo $fila['superficie_cubierta'];?> mt2</span></div>
-										<div class="col-lg-6 col-6 p-0">Sup. Total: <span class="color"><?php echo $fila['superficie_total'];?> mt2</span></div>
+										<div class="col-lg-6 col-6 p-0">
+											Sup. Cubierta: {{prop.roofed_surface}} mt2
+										</div>
+										<div class="col-lg-6 col-6 p-0">Sup. Total: <span class="color">{{prop.total_surface}} mt2</span></div>
 										<br>
-										<?php if ($fila['apto_credito']==1) {?>
-										<div class="col-lg-6 col-6 p-0">Apto Crédito: <span class="text-success"><i class="icon-check-sign"></i></span></div>
-										<?php }else{?>
-										<div class="col-lg-6 col-6 p-0">Apto Crédito: <span class="text-danger"><i class="icon-minus-sign-alt"></i></span></div>
-										<?php }?>
+										
+										<!--<div class="col-lg-6 col-6 p-0">Apto Crédito: <span class="text-success"><i class="icon-check-sign"></i></span></div>
+										
+										<div class="col-lg-6 col-6 p-0">Apto Crédito: <span class="text-danger"><i class="icon-minus-sign-alt"></i></span></div>-->
+
 									</div>
 								</div>
 							</div>
 							
-							<?php
-							}
-							Database::disconnect();
-							?>
-
 						</div>
-
+					
+					</div>
 					</div>
 				</div>
 			</div><!-- .content-wrap end -->
@@ -240,6 +201,10 @@
 	============================================= -->
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins.min.js"></script>
+	<!--LIBRERÍA ANGULAR-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    	<script src="js/tokko/angular-route.min.js"></script>
+	<script src="js/tokko/tokkoSearch.js"></script>
 
 	<!-- Bootstrap Select Plugin -->
 	<script src="js/components/bs-select.js"></script>
