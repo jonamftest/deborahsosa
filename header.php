@@ -21,7 +21,7 @@
 								<li class="menu-item"><a class="menu-link" href="index.php"><div>Inicio</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="tasaciones.php"><div>Tasaciones</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="brochure.pdf" target="_blank"><div>Contratación</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="buscador.php?opt=oportunidades"><div>Oportunidades</div></a></li>
+								<li class="menu-item"><a class="menu-link" href="buscador.php"><div>Oportunidades</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="brochure.pdf" target="_blank"><div>¿Quiénes somos?</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="contacto.php"><div>Contacto</div></a></li>
 							</ul>
