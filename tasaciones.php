@@ -1,5 +1,5 @@
 <?php
-    require("admin/pages/config.php");
+    /*require("admin/pages/config.php");
 	require("admin/pages/database.php");
 	require("PHPMailer/class.phpmailer.php");
 	require("PHPMailer/class.smtp.php");
@@ -40,11 +40,11 @@
 			
 		Database::disconnect();
 		
-	}
+	}*/
 	
 ?>
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" ng-app="tokkoSendtasaciones">
 <head>
 
 	<?php include("head.php"); ?>
@@ -54,7 +54,7 @@
 
 	<!-- Document Wrapper
 	============================================= -->
-	<div id="wrapper" class="clearfix">
+	<div id="wrapper" class="clearfix" ng-controller="tokkoSendTasacionesController">
 
 		<!-- Header
 		============================================= -->
@@ -75,7 +75,7 @@
 		<section id="content">
 			<div class="content-wrap">
 				<div class="container clearfix">
-					<form id="" name="billing-form" class="row mb-0" action="tasaciones.php" method="post">
+					<form id="" name="billing-form" class="row mb-0">
 					<div class="row col-mb-50 gutter-50">
 						<div class="col-lg-6">
 							<h3>Datos de Contacto</h3>
@@ -86,17 +86,17 @@
 								
 								<div class="col-md-12 form-group">
 									<label for="shipping-form-name">Nombre:</label>
-									<input type="text" id="shipping-form-name" name="nombre" value="" class="sm-form-control" />
+									<input type="text" id="shipping-form-name" name="nombre" value="" class="sm-form-control" required/>
 								</div>
 
 								<div class="col-12 form-group">
 									<label for="shipping-form-companyname">Teléfono:</label>
-									<input type="text" id="shipping-form-companyname" name="telefono" value="" class="sm-form-control" />
+									<input type="text" id="shipping-form-companyname" name="telefono" value="" class="sm-form-control" required/>
 								</div>
 
 								<div class="col-12 form-group">
 									<label for="shipping-form-address">E-Mail:</label>
-									<input type="email" id="shipping-form-address" name="email" value="" class="sm-form-control" />
+									<input type="email" id="shipping-form-address" name="email" value="" class="sm-form-control" required/>
 								</div>
 
 							
@@ -111,7 +111,7 @@
 
 								<div class="col-md-12 form-group">
 									<label for="template-contactform-service">Tipo de operación</label>
-									<select id="template-contactform-service" name="operacion" class="sm-form-control">
+									<select id="template-contactform-service" name="operacion" class="sm-form-control" required>
 										<option value="">-- Seleccione --</option>
 										<option value="Venta">Venta</option>
 										<option value="Alquiler">Alquiler</option>
@@ -121,7 +121,7 @@
 
 								<div class="col-md-12 form-group">
 									<label for="template-contactform-service">Tipo de propiedad</label>
-									<select id="template-contactform-service" name="propiedad" class="sm-form-control">
+									<select id="propiedad" name="propiedad" class="sm-form-control" required>
 										<option value="">-- Seleccione --</option>
 										<option value="Departamento">Departamento</option>
 										<option value="Casa">Casa</option>
@@ -147,11 +147,15 @@
 							
 						</div>
 
+						<div class="alert alert-success col-12 text-center p-0 pt-4" role="alert" id="mensajeEnviadoOK" style="display: none">
+							<h4>¡Mensaje enviado!</h4>
+						</div>
+
 						<div class="w-100"></div>
 						
 						<div class="col-lg-12">
 							
-							<button name="submit" type="submit" id="submit-button" tabindex="5" value="Submit" class="button button-3d m-0">Enviar</button>
+							<button name="submit" type="submit" id="submit-button" tabindex="5" class="button button-3d m-0" ng-click="enviarMensajeTasaciones()">Enviar</button>
 						</div>
 						
 					</div>
@@ -176,6 +180,10 @@
 	============================================= -->
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins.min.js"></script>
+
+	<!--LIBRERÍA ANGULAR-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<script src="js/tokko/tokkoSendTasaciones.js"></script>
 
 	<!-- Footer Scripts
 	============================================= -->

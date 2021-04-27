@@ -198,13 +198,13 @@
 										<div class="card bg-light">
 											<div class="card-header">Consultanos</div>
 											<div class="card-body">
-												<form name="form1" action="enviarForm.php" method="post" class="mb-0">
-													<input type="text" required class="required sm-form-control input-block-level" id="" name="nombre" value="" placeholder="Nombre" /><br>
-													<input type="text" required class="required sm-form-control email input-block-level" id="" name="email" value="" placeholder="E-mail" /><br>
-													<input type="number" required class="required sm-form-control number input-block-level" id="" name="telefono" value="" placeholder="Teléfono" /><br>
-													<textarea required class="required sm-form-control input-block-level short-textarea" id="" name="mensaje" rows="4" cols="30" placeholder="Mensaje"></textarea><br>
+												<form class="mb-0">
+													<input type="text" required class="required sm-form-control input-block-level" value="" placeholder="Nombre" id="nombre" /><br>
+													<input type="text" required class="required sm-form-control email input-block-level" name="correo" value="" placeholder="E-mail" id="correo" /><br>
+													<input type="number" required class="required sm-form-control number input-block-level" name="telefono" value="" placeholder="Teléfono" id="telefono" /><br>
+													<textarea required class="required sm-form-control input-block-level short-textarea" name="mensaje" rows="4" cols="30" placeholder="Mensaje" id="mensaje"></textarea><br>
 													<input type="hidden" name="id_publicacion" value="<?php echo $data['id'];?>">
-													<input type="submit" class="button  button-rounded btn-block m-0" value="Enviar">
+													<button class="button  button-rounded btn-block m-0" value="Enviar" ng-click="EnviarConsulta()">Enviar</button>
 												</form>
 											</div>
 										</div>
@@ -250,7 +250,7 @@
 
 	<!--LIBRERÍA ANGULAR-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    	<script src="js/tokko/angular-route.min.js"></script>
+    <script src="js/tokko/angular-route.min.js"></script>
 	<script src="js/tokko/tokkoDetails.js"></script>
 
 	<!-- Footer Scripts

@@ -1,5 +1,5 @@
 <?php
-    require("admin/pages/config.php");
+    /*require("admin/pages/config.php");
 	require("admin/pages/database.php");
 	require("PHPMailer/class.phpmailer.php");
 	require("PHPMailer/class.smtp.php");
@@ -40,17 +40,17 @@
 			
 		Database::disconnect();
 		
-	}
+	}*/
 	
 ?>
 <!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<html dir="ltr" lang="en-US" ng-app="tokkoSendContact">
 <head>
 
 	<?php include("head.php"); ?>
 </head>
 
-<body class="stretched">
+<body class="stretched" ng-controller="tokkoSendContactController">
 
 	<!-- Document Wrapper
 	============================================= -->
@@ -89,13 +89,13 @@
 
 								<div class="form-result"></div>
 
-								<form class="mb-0" id="" name="template-contactform" action="contacto.php" method="post">
+								<form class="mb-0" id="" name="template-contactform" >
 
-									<div class="form-process">
+									<!--<div class="form-process">
 										<div class="css3-spinner">
 											<div class="css3-spinner-scaler"></div>
 										</div>
-									</div>
+									</div>-->
 
 									<div class="row">
 										<div class="col-md-4 form-group">
@@ -110,7 +110,7 @@
 
 										<div class="col-md-4 form-group">
 											<label for="template-contactform-phone">Teléfono</label>
-											<input type="text" id="template-contactform-phone" name="telefono" value="" class="sm-form-control" />
+											<input type="text" id="template-contactform-phone" name="telefono" value="" class="sm-form-control required" />
 										</div>
 
 										<div class="w-100"></div>
@@ -122,12 +122,12 @@
 
 										<div class="col-md-4 form-group">
 											<label for="template-contactform-service">Motivo</label>
-											<select id="template-contactform-service" name="motivo" class="sm-form-control">
+											<select id="template-contactform-service" name="motivo" class="sm-form-control required">
 												<option value="">-- Seleccione --</option>
 												<option value="Tasaciones">Tasaciones</option>
 												<option value="Inversiones">Inversiones</option>
 												<option value="Administración">Administración</option>
-												<option value="CV" <?php if (!empty($_GET['opcion'])) { echo "selected"; }?>>Trabajá con nosotros</option>
+												<option value="CV">Trabajá con nosotros</option>
 											</select>
 										</div>
 
@@ -142,10 +142,16 @@
 											<input type="text" id="template-contactform-botcheck" name="template-contactform-botcheck" value="" class="sm-form-control" />
 										</div>
 
+										<div class="alert alert-success col-12 text-center p-0 pt-4" role="alert" id="mensajeEnviadoOK" style="display: none">
+											<h4>¡Mensaje enviado!</h4>
+										</div>
+
 										<div class="col-12 form-group">
-											<button name="submit" type="submit" id="submit-button" tabindex="5" value="Submit" class="button button-3d m-0">Enviar</button>
+											<button name="submit" type="submit" id="submit-button" tabindex="5" value="Submit" class="button button-3d m-0" ng-click="enviarMensajeContacto()">Enviar</button>
 										</div>
 									</div>
+
+									
 
 									<input type="hidden" name="prefix" value="template-contactform-">
 
@@ -208,6 +214,10 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/plugins.min.js"></script>
 	<script src="https://maps.google.com/maps/api/js?key=AIzaSyBcg5Y2D1fpGI12T8wcbtPIsyGdw-_NV1Y"></script>
+
+	<!--LIBRERÍA ANGULAR-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+	<script src="js/tokko/tokkoSendContact.js"></script>
 
 	<!-- Footer Scripts
 	============================================= -->

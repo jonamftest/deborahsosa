@@ -30,4 +30,37 @@ app.controller("tokkoDetailsControllers", function($scope, $http){
 				$mapa.append("<iframe src='https://www.google.com/maps?q="+$scope.propiedades.geo_lat+","+$scope.propiedades.geo_long+"&#038;z=14&#038;t=&#038;ie=UTF8&#038;output=embed' width='500' height='500'></iframe>");
 			});
 	}
+
+	$scope.EnviarConsulta = function(){
+
+
+	var name = document.getElementById('nombre').value;
+	var email=document.getElementById('correo').value;
+	var telefono=document.getElementById('telefono').value;
+	var mensaje=document.getElementById('mensaje').value;
+
+	if (name == '' || email =='' || telefono =='' || mensaje =='') {
+
+	}else{
+
+
+		var datos = new Object();
+
+		datos.properties = $scope.id_propiedad,
+		datos.name = name;
+		datos.email = email;
+		datos.text = mensaje;
+		datos.phone = telefono;
+
+		datosJson = JSON.stringify(datos);
+
+		
+
+		$http.post('http://www.tokkobroker.com/api/v1/webcontact/?key=d6461f2e41bad2eb759162dac0a8f54ac19c9b23', datosJson)
+				.then(function(response){
+				//$scope.propiedades =  response.data;
+					//console.log(response);
+			});
+	}
+	}
 })
