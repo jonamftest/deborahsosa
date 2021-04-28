@@ -50,7 +50,7 @@ app.controller("tokkoDetailsControllers", function($scope, $http){
 		datos.name = name;
 		datos.email = email;
 		datos.text = mensaje;
-		datos.cellphone = telefono;
+		datos.phone = telefono;
 
 		datosJson = JSON.stringify(datos);
 
